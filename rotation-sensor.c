@@ -66,9 +66,11 @@ static ssize_t rotation_sensor_read(struct file * filp, char * __user buffer, si
 	int lg;
 	char kbuffer[64];
 	unsigned long irqmsk;
+	long int angle;
 
+	angle = (g_rotation_sensor.value * 3600)/ count_max;
 	spin_lock_irqsave(& (g_rotation_sensor.spinlock), irqmsk);
-	snprintf(kbuffer, 64, "%ld\n", (g_rotation_sensor.value * 360)/ count_max);
+	snprintf(kbuffer, 64, "%ld.%ld\n", angle/10, angle%10);
 	spin_unlock_irqrestore(& (g_rotation_sensor.spinlock), irqmsk);
 
 	lg = strlen(kbuffer);
